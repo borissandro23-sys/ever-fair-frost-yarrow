@@ -1,0 +1,36 @@
+name: Build Screen Time Breaker
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'ScreenTimeBreaker/**'
+      - 'project.yml'
+      - '.github/workflows/build-ios.yml'
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate Xcode project
+        run: xcodegen generate
+      - name: Build for iOS (unsigned)
+        run: xcodebuild -project ScreenTimeBreaker.xcodeproj -scheme ScreenTimeBreaker -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
+      - name: Package app artifact
+        run: |
+          mkdir -p output
+          APP_PATH=$(find build/Build/Products/Release-iphoneos -maxdepth 1 -name '*.app' -print -quit)
+          test -n "$APP_PATH"
+          ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" output/ScreenTimeBreaker-unsigned-app.zip
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ScreenTimeBreaker-unsigned-app
+          path: output/ScreenTimeBreaker-unsigned-app.zip
+          if-no-files-found: error
+          retention-days: 14
