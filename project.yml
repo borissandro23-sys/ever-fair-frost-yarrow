@@ -1,0 +1,23 @@
+name: ScreenTimeBreaker
+options:
+  bundleIdPrefix: com.borissandro23
+  deploymentTarget:
+    iOS: "15.0"
+targets:
+  ScreenTimeBreaker:
+    type: application
+    platform: iOS
+    sources:
+      - path: ScreenTimeBreaker
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.borissandro23.screentimebreaker
+        PRODUCT_NAME: ScreenTimeBreaker
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        INFOPLIST_KEY_CFBundleDisplayName: Screen Time Breaker
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: "15.0"
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGNING_ALLOWED: NO
